@@ -716,8 +716,8 @@ Task ("target-sdk-version-check")
             // Run the dotnet tool for binderator
             RunProcess
             (
-                "xamarin-android-binderator",
-                $"--config=\"{config_file}\" --basepath=\"{base_path}\""
+                "dotnet",
+                $"xamarin-android-binderator --config=\"{config_file}\" --basepath=\"{base_path}\""
             );
 
             Dictionary<(string group, string artifact), int> artifacts_target_sdk = null;

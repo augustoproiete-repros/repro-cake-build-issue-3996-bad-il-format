@@ -1,0 +1,39 @@
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "*.*.*"
+    paths-ignore:
+      - "README.md"
+
+  pull_request:
+
+  workflow_dispatch:
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - os: macos-12
+    name: ${{ matrix.job.os }}
+    runs-on: ${{ matrix.job.os }}
+    steps:
+      - name: Setup net6.0
+        uses: actions/setup-dotnet@v3.0.3
+        with:
+          dotnet-version: "6.0.403"
+      - name: Run dotnet --info
+        run: dotnet --info
+      - uses: actions/checkout@v3.2.0
+        with:
+          fetch-depth: 0
+      - name: Build
+        run: dotnet tool restore && dotnet cake --target=clean --verbosity=diagnostic && dotnet cake --target=ci --verbosity=diagnostic

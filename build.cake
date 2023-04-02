@@ -210,7 +210,7 @@ Task("inject-variables")
 Task("check-tools")
     .Does(() =>
 {
-    var installedTools = RunProcessWithOutput("dotnet", "tool list -g");
+    var installedTools = RunProcessWithOutput("dotnet", "tool list");
     foreach (var toolName in REQUIRED_DOTNET_TOOLS) {
         if (installedTools.All(l => l.IndexOf(toolName, StringComparison.OrdinalIgnoreCase) == -1))
             throw new Exception ($"Missing dotnet tool: {toolName}");
@@ -271,8 +271,8 @@ Task ("binderate")
     var basePath = MakeAbsolute(new DirectoryPath ("./")).FullPath;
 
     // Run the dotnet tool for binderator
-    RunProcess("xamarin-android-binderator",
-        $"--config=\"{configFile}\" --basepath=\"{basePath}\"");
+    RunProcess("dotnet",
+        $"xamarin-android-binderator --config=\"{configFile}\" --basepath=\"{basePath}\"");
 
     // format the targets file so they are pretty in the package
     var targetsFiles = GetFiles("generated/**/*.targets");
